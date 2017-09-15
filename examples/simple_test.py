@@ -19,13 +19,12 @@ def main(master):
         },
         'name': 'JupyterHubExecutor',
         'command': {
-            'value': "{} && {} && {} && {} && {} {}".format(
+            'value': "{} && {} && {} && {} && {}".format(
                 'git clone https://github.com/tanderegg/mesos-spawner',
                 'virtualenv env',
                 'source env/bin/activate',
                 'python -m pip install -r mesos-spawner/requirements.txt',
-                '/usr/local/bin/python2.7',
-                'mesos-spawner/mesos_spawner/executor.py'
+                'python mesos-spawner/mesos_spawner/executor.py'
             )
         },
         'resources': [
