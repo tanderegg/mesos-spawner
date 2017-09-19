@@ -38,5 +38,5 @@ class MinimalExecutor(Executor):
 if __name__ == '__main__':
     import logging
     logging.basicConfig(level=logging.DEBUG)
-    driver = MesosExecutorDriver(MinimalExecutor(), use_addict=True)
+    driver = MesosExecutorDriver(MinimalExecutor(), use_addict=False)
     driver.run()

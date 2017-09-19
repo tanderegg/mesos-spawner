@@ -7,7 +7,7 @@ from os.path import abspath, join, dirname
 from threading import Thread
 
 from pymesos import MesosSchedulerDriver
-from mesos_spawner.scheduler import JupyterScheduler
+from mesos_spawner.scheduler import TestScheduler
 
 EXECUTOR_CPU = 0.1
 EXECUTOR_MEM = 32
@@ -24,7 +24,8 @@ def main(master):
                 'virtualenv env',
                 'source env/bin/activate',
                 'python -m pip install -r mesos-spawner/requirements.txt',
-                'python mesos-spawner/mesos_spawner/executor.py'
+                #'python mesos-spawner/mesos_spawner/executor.py'
+                'echo "Hello world!" && sleep 30'
             )
         },
         'resources': [
