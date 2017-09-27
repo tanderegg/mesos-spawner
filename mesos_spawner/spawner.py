@@ -1,13 +1,14 @@
 import socket
 from threading import Thread
+import logging
 
 from traitlets import Unicode
 from textwrap import dedent
 from jupyterhub.spawner import Spawner
 
-from mesos_spawner.scheduler import JupyterScheduler
+from mesos_spawner.scheduler import JupyterHubScheduler
 
-class MesosSpawner(Spawner)
+class MesosSpawner(Spawner):
     _scheduler = None
     _scheduler_thread = None
     _count = None
@@ -40,8 +41,9 @@ class MesosSpawner(Spawner)
                 'hostname': socket.gethostname()
             }
 
+            logging.debug("Starting Mesos scheduler...")
             cls._scheduler = MesosSchedulerDriver(
-                JupyterScheduler(),
+                JupyterHubScheduler(),
                 framework_info,
                 self.mesos_master
             )
@@ -53,17 +55,17 @@ class MesosSpawner(Spawner)
             cls._scheduler_thread.start()
         return cls._scheduler
 
-    def __init__(self):
-        self.task_id = None
-
     def start(self):
         task_id = self.scheduler.add_notebook()
+        logging.debug("Spawning Jupyter with task id: {}".format(task_id))
 
         while True:
             if self.scheduler.is_task_running(task_id):
                 break
             else:
                 time.sleep(1)
+
+        logging.debug("New Jupyter instance started!")
 
         self.count += 1
 
@@ -74,9 +76,11 @@ class MesosSpawner(Spawner)
         return None
 
     def stop(self):
+        logging.debug("Stopping Jupyter instance...")
         self.count -= 1
 
         if self.count < 1:
+            logging.debug("No more instances, stopping scheduler...")
             self.scheduler.stop()
 
     def load_state(self, state):

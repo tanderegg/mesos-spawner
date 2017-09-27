@@ -13,8 +13,8 @@ class JupyterHubScheduler(Scheduler):
 
     def __init__(self):
         self.queue = Queue(maxsize=0)
-        self.notebook_request = None'
-        self.tasks_running = []
+        self.notebook_request = None
+        self.tasks_running = set()
 
     def is_task_running(self, task_id):
         if task_id in self.tasks_running:
@@ -89,8 +89,8 @@ class JupyterHubScheduler(Scheduler):
         def statusUpdate(self, driver, update):
             task_id = update['task_id']['value']
 
-            if update['state'] == 'TASK_RUNNING' and task_id not in self.tasks_running:
-                self.tasks_running.append(task_id)
+            if update['state'] == 'TASK_RUNNING':
+                self.tasks_running.add(task_id)
 
 
 class TestScheduler(Scheduler):
