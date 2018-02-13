@@ -7,7 +7,10 @@ from threading import Thread
 
 from pymesos import MesosExecutorDriver, Executor, decode_data
 
-class MinimalExecutor(Executor):
+class JupyterHubExecutor(Executor):
+    """
+    May not be necessary
+    """
     def launchTask(self, driver, task):
         def run_task(task):
             update = {
@@ -33,10 +36,3 @@ class MinimalExecutor(Executor):
 
         thread = Thread(target=run_task, args=(task,))
         thread.start()
-
-
-if __name__ == '__main__':
-    import logging
-    logging.basicConfig(level=logging.DEBUG)
-    driver = MesosExecutorDriver(MinimalExecutor(), use_addict=False)
-    driver.run()

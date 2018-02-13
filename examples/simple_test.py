@@ -19,14 +19,16 @@ def main(master):
         },
         'name': 'JupyterHubExecutor',
         'command': {
-            'value': "{} && {} && {} && {} && {}".format(
-                'git clone https://github.com/tanderegg/mesos-spawner',
-                'virtualenv env',
-                'source env/bin/activate',
-                'python -m pip install -r mesos-spawner/requirements.txt',
+            'value': 'while true; do echo "Hello world!"; sleep 2; done'
+                #"{} && {} && {} && {} && {}".format(
+                #'git clone https://github.com/tanderegg/mesos-spawner',
+                #'virtualenv env',
+                #'source env/bin/activate',
+                #'python -m pip install -r mesos-spawner/requirements.txt',
                 #'python mesos-spawner/mesos_spawner/executor.py'
-                'echo "Hello world!" && sleep 30'
-            )
+                #'echo "Hello world!" && sleep 30'
+
+            #)
         },
         'resources': [
             {'name': 'cpus', 'type': 'SCALAR', 'scalar': {'value': EXECUTOR_CPU}},
@@ -35,13 +37,14 @@ def main(master):
     }
 
     framework = {
-        'user': getpass.getuser(),
+        'user': 'mesagent', #getpass.getuser(),
         'name': 'JupyterHubFramework',
         'hostname': socket.gethostname()
     }
 
     driver = MesosSchedulerDriver(
-        JupyterScheduler(executor),
+        #JupyterScheduler(executor),
+        TestScheduler(),
         framework,
         master
     )
