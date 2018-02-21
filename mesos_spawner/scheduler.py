@@ -31,7 +31,14 @@ class JupyterHubScheduler(Scheduler):
         })
         return task_id
 
+    def getResource(self, resources, name):
+        for resource in resources:
+            if resource['name'] == name:
+                return resource['scalar']['value']
+        return 0.0
+
     def resourceOffers(self, driver, offers):
+        logging.debug("Recieved offers: {}".format(offers))
         filters = {'refuse_seconds': 5}
 
         if len(offers) < 1:
@@ -88,6 +95,10 @@ class JupyterHubScheduler(Scheduler):
 
         def statusUpdate(self, driver, update):
             task_id = update['task_id']['value']
+            logging.debug("Received task update: {} for {}".format(
+                update,
+                task_id
+            ))
 
             if update['state'] == 'TASK_RUNNING':
                 self.tasks_running.add(task_id)

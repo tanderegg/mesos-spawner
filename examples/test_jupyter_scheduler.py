@@ -29,6 +29,7 @@ def main(master):
         driver.stop()
 
     def run_driver_thread():
+        logging.debug("Running driver thread")
         driver.run()
 
     driver_thread = Thread(target=run_driver_thread, args=())
