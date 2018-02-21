@@ -69,7 +69,7 @@ if __name__ == '__main__':
     import logging
     logging.basicConfig(level=logging.DEBUG)
     if len(sys.argv) != 2:
-        print("Usage: {} <mesos_master>".format(sys.argv[0]))
+        print("Usage: {} <mesos_master_uri>".format(sys.argv[0]))
         sys.exit(1)
     else:
         main(sys.argv[1])
