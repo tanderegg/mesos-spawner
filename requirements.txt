@@ -1,3 +1,4 @@
+pytest
 uuid
 requests
 jupyterhub

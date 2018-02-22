@@ -19,8 +19,10 @@ def main(master):
         'hostname': socket.gethostname()
     }
 
+    scheduler = JupyterHubScheduler()
+
     driver = MesosSchedulerDriver(
-        JupyterHubScheduler(),
+        scheduler,
         framework,
         master
     )
@@ -39,8 +41,13 @@ def main(master):
 
     signal.signal(signal.SIGINT, signal_handler)
 
+    seconds = 0
     while driver_thread.is_alive():
         time.sleep(1)
+        seconds += 1
+        if seconds == 5:
+            task_id = scheduler.add_notebook()
+            logging.debug("Requested new notebook: {}".format(task_id))
 
 if __name__ == '__main__':
     import logging

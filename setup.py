@@ -6,6 +6,9 @@ from __future__ import print_function
 import os
 import sys
 
+from setuptools import find_packages
+from setuptools import setup
+
 v = sys.version_info
 if v[:2] < (3,3):
     error = "ERROR: Jupyter Hub requires Python version 3.3 or above."
@@ -19,10 +22,8 @@ if os.name in ('nt', 'dos'):
 
 # At least we're on the python version we need, move on.
 
-from setuptools import setup
-
 pjoin = os.path.join
-here = os.path.abspath(os.path.dirname(__file__))
+here = os.path.abspath(pjoin(os.path.dirname(__file__), 'src/'))
 
 # Get the current package version.
 version_ns = {}
@@ -48,7 +49,8 @@ class bdist_egg_disabled(bdist_egg):
 
 setup_args = dict(
     name                = 'mesos_spawner',
-    packages            = ['mesos_spawner'],
+    packages            = find_packages('src'),
+    package_dir         = {'': 'src'},
     version             = version_ns['__version__'],
     description         = """Mesos Spawner: A Mesos framework for Jupyterhub.""",
     long_description    = "Spawn single-user servers with Mesos.",
