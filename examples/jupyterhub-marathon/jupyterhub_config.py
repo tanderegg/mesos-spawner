@@ -626,7 +626,7 @@ c.ConfigurableHTTPProxy.command='node_modules/.bin/configurable-http-proxy'
 #  Admin access should be treated the same way root access is.
 #
 #  Defaults to an empty set, in which case no user has admin access.
-c.Authenticator.admin_users = set('vagrant')
+c.Authenticator.admin_users = set("vagrant")
 
 ## Automatically begin the login process
 #
