@@ -6,6 +6,7 @@ from traitlets import Unicode
 from textwrap import dedent
 from jupyterhub.spawner import Spawner
 
+from pymesos import MesosSchedulerDriver
 from mesos_spawner.scheduler import JupyterHubScheduler
 
 class MesosSpawner(Spawner):
@@ -37,6 +38,7 @@ class MesosSpawner(Spawner):
         if cls._scheduler is None:
             framework_info = {
                 #'user': self.user.name,
+                'user': 'mesagent'
                 'name': 'JupyterHubFramework',
                 'hostname': socket.gethostname()
             }
