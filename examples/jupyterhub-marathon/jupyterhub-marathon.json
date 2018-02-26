@@ -1,0 +1,38 @@
+{
+  "id": "jupyterhub",
+  "cmd": "mesos-spawner-init/examples/jupyterhub-marathon/run.sh",
+  "cpus": 0.5,
+  "mem": 128,
+  "disk": 0,
+  "instances": 1,
+  "container": {
+    "type": "MESOS",
+    "volumes": [
+      {
+        "containerPath": "/tmp",
+        "hostPath": "tmp",
+        "mode": "RW"
+      }
+    ]
+  },
+  "portDefinitions": [
+    {
+      "port": 0,
+      "protocol": "tcp",
+      "name": null,
+      "labels": null
+    },
+    {
+      "port": 1,
+      "protocol": "tcp",
+      "name": null,
+      "labels": null
+    }
+  ],
+  "env": {},
+  "labels": {},
+  "healthChecks": [],
+  "uris": [
+    "https://github.com/tanderegg/mesos-spawner/archive/init.tar.gz"
+  ]
+}
