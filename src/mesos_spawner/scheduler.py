@@ -114,7 +114,7 @@ class JupyterHubScheduler(Scheduler):
             'agent_id': {
                 'value': offer['agent_id']['value']
             },
-            'name': 'notebook-{}'.format(task_id),
+            'name': 'jupyterhub-{}-{}'.format(self.notebook_request['user'], task_id),
             'command': {
                 'value': ' && '.join([
                     "virtualenv -p python3 /tmp/env",
@@ -127,6 +127,10 @@ class JupyterHubScheduler(Scheduler):
                         {
                             'name': 'JUPYTERHUB_API_TOKEN',
                             'value': '0'
+                        },
+                        {
+                            'name': 'PORT0',
+                            'value': ports[0]
                         }
                     ]
                 },

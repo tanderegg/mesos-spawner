@@ -1,6 +1,5 @@
 import socket
 import logging
-import time
 from threading import Thread
 
 from traitlets import Unicode
@@ -69,23 +68,25 @@ class MesosSpawner(Spawner):
         while True:
             if self.scheduler.is_task_running(task_id):
                 logging.debug("New Jupyter instance started!")
-                self.count += 1
+                self.count = self.count + 1
 
                 # TODO: Get real ones
                 ip = "10.0.1.34"
                 port = 1234
 
                 return (ip, port)
-            yield time.sleep(1)
+            yield gen.sleep(1)
 
     def poll(self):
-        # For now, assuming task is running.
-        # Might not need to change this, just let scheduler keep it alive?
-        return None
+        # TODO: More robust state checking
+        if self.task_id:
+            return None
+        else:
+            return 0
 
     def stop(self):
         logging.debug("Stopping Jupyter instance...")
-        self.count -= 1
+        self.count = self.count - 1
 
         if self.count < 1:
             logging.debug("No more instances, stopping scheduler...")
