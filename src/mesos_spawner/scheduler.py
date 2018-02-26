@@ -43,7 +43,7 @@ class JupyterHubScheduler(Scheduler):
         return 0.0
 
     def get_task(self, task_id):
-        return self.task_inf[task_id]
+        return self.task_info[task_id]
 
     def resourceOffers(self, driver, offers):
         filters = {'refuse_seconds': 5}
