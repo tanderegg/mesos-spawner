@@ -36,9 +36,9 @@ class JupyterHubScheduler(Scheduler):
             if resource['name'] == name:
                 if resource['type'] == 'SCALAR':
                     return resource['scalar']['value']
-            elif resource['type'] == 'RANGES':
-                    range = resource['ranges']['range']
-                    return range(int(range['begin']), int(range['end']))
+                elif resource['type'] == 'RANGES':
+                    res_range = resource['ranges']['range'][0]
+                    return range(int(res_range['begin']), int(res_range['end']))
         return 0.0
 
     def resourceOffers(self, driver, offers):
@@ -144,7 +144,7 @@ class JupyterHubScheduler(Scheduler):
             'resources': [
                 {'name': 'cpus', 'type': 'SCALAR', 'scalar': {'value': self.notebook_request['cpus']}},
                 {'name': 'mem', 'type': 'SCALAR', 'scalar': {'value': self.notebook_request['mem']}},
-                {'name': 'ports', 'type': 'RANGE', 'ranges': {'range': {'begin': ports[0], 'end': port[1]}}}
+                {'name': 'ports', 'type': 'RANGES', 'ranges': {'range': {'begin': ports[0], 'end': ports[1]}}}
             ]
         }
 
