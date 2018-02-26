@@ -15,6 +15,7 @@ class JupyterHubScheduler(Scheduler):
         self.queue = Queue(maxsize=0)
         self.notebook_request = None
         self.tasks_running = set()
+        self.task_info = dict()
 
     def is_task_running(self, task_id):
         if task_id in self.tasks_running:
@@ -40,6 +41,9 @@ class JupyterHubScheduler(Scheduler):
                     res_range = resource['ranges']['range'][0]
                     return range(int(res_range['begin']), int(res_range['end']))
         return 0.0
+
+    def get_task_info(task_id):
+        return self.task_inf[task_id]
 
     def resourceOffers(self, driver, offers):
         filters = {'refuse_seconds': 5}
@@ -154,6 +158,10 @@ class JupyterHubScheduler(Scheduler):
 
         logging.debug("Launching task {}".format(task_id))
         driver.launchTasks(offer['id'], [task], filters)
+        self.task_info[task_id] = {
+            "port": ports[0],
+            "ip": offer['url']['address']['ip']
+        }
         self.queue.task_done()
         self.notebook_request = None
         return True

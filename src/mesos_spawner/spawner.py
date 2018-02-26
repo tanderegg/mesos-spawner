@@ -75,9 +75,8 @@ class MesosSpawner(Spawner):
                 logging.debug("New Jupyter instance started!")
                 self.count = self.count + 1
 
-                # TODO: Get real ones
-                ip = "10.0.1.34"
-                port = 1234
+                ip = self.scheduler.get_task(task_id)['ip']
+                port = self.scheduler.get_task(task_id)['port']
 
                 return (ip, port)
             yield gen.sleep(1)
@@ -89,6 +88,7 @@ class MesosSpawner(Spawner):
         else:
             return 0
 
+    @gen.coroutine
     def stop(self):
         logging.debug("Stopping Jupyter instance...")
         self.count = self.count - 1
