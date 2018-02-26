@@ -3,3 +3,4 @@ uuid
 requests
 jupyterhub
 PyMesos
+tornado

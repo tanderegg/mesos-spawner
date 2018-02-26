@@ -5,6 +5,7 @@ import logging
 from traitlets import Unicode
 from textwrap import dedent
 from jupyterhub.spawner import Spawner
+from tornado import gen
 
 from pymesos import MesosSchedulerDriver
 from mesos_spawner.scheduler import JupyterHubScheduler
@@ -12,6 +13,7 @@ from mesos_spawner.scheduler import JupyterHubScheduler
 class MesosSpawner(Spawner):
     _scheduler = None
     _scheduler_thread = None
+    _scheduler_driver = None
     _count = None
 
     mesos_master_uri = Unicode(
@@ -44,33 +46,36 @@ class MesosSpawner(Spawner):
             }
 
             logging.debug("Starting Mesos scheduler...")
-            cls._scheduler = MesosSchedulerDriver(
-                JupyterHubScheduler(),
+            cls._scheduler = JupyterHubScheduler()
+            cls._scheduler_driver = MesosSchedulerDriver(
+                self._scheduler,
                 framework_info,
                 self.mesos_master_uri
             )
 
             def run_driver_thread():
-                cls._scheduler.run()
+                cls._scheduler_driver.run()
 
             cls._scheduler_thread = Thread(target=run_driver_thread, args=())
             cls._scheduler_thread.start()
         return cls._scheduler
 
+    @gen.coroutine
     def start(self):
         task_id = self.scheduler.add_notebook()
         logging.debug("Spawning Jupyter with task id: {}".format(task_id))
 
         while True:
             if self.scheduler.is_task_running(task_id):
-                break
-            else:
-                time.sleep(1)
+                logging.debug("New Jupyter instance started!")
+                self.count += 1
 
-        logging.debug("New Jupyter instance started!")
+                # TODO: Get real ones
+                ip = "10.0.1.34"
+                port = 1234
 
-        self.count += 1
-
+                return (ip, port)
+            yield time.sleep(1)
 
     def poll(self):
         # For now, assuming task is running.
