@@ -112,7 +112,7 @@ class JupyterHubScheduler(Scheduler):
                 'value': ' && '.join([
                     "virtualenv -p python3 /tmp/env",
                     "/tmp/env/bin/python -m pip install jupyter jupyterhub",
-                    "/tmp/env/bin/jupyterhub-singleuser --ip=0.0.0.0 --debug --generate-config -y"
+                    "/tmp/env/bin/jupyterhub-singleuser --ip=0.0.0.0 --port $PORT0 --debug -y"
                 ]),
                 'user': self.notebook_request['user'],
                 'environment': {

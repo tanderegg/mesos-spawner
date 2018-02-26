@@ -31,7 +31,17 @@
   ],
   "env": {},
   "labels": {},
-  "healthChecks": [],
+  "healthChecks": [
+   {
+     "protocol": "HTTP",
+     "path": "/",
+     "portIndex": 0,
+     "gracePeriodSeconds": 300,
+     "intervalSeconds": 60,
+     "timeoutSeconds": 20,
+     "maxConsecutiveFailures": 3
+   }
+ ],
   "uris": [
     "https://github.com/tanderegg/mesos-spawner/archive/init.tar.gz"
   ]
