@@ -74,8 +74,8 @@ c.JupyterHub.admin_access = True
 #  - takes two arguments: (handler, data),
 #    where `handler` is the calling web.RequestHandler,
 #    and `data` is the POST form data from the login page.
-#c.JupyterHub.authenticator_class = 'jupyterhub.auth.PAMAuthenticator'
-c.JupyterHub.authenticator_class = 'jupyterhub.auth.LocalAuthenticator'
+c.JupyterHub.authenticator_class = 'jupyterhub.auth.PAMAuthenticator'
+#c.JupyterHub.authenticator_class = 'jupyterhub.auth.LocalAuthenticator'
 
 ## The base URL of the entire application
 #c.JupyterHub.base_url = '/'
@@ -626,7 +626,7 @@ c.ConfigurableHTTPProxy.command='node_modules/.bin/configurable-http-proxy'
 #  Admin access should be treated the same way root access is.
 #
 #  Defaults to an empty set, in which case no user has admin access.
-#c.Authenticator.admin_users = set()
+c.Authenticator.admin_users = set('vagrant')
 
 ## Automatically begin the login process
 #
