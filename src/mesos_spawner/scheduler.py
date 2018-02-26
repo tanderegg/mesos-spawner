@@ -130,7 +130,7 @@ class JupyterHubScheduler(Scheduler):
                         },
                         {
                             'name': 'PORT0',
-                            'value': ports[0]
+                            'value': str(ports[0])
                         }
                     ]
                 },
