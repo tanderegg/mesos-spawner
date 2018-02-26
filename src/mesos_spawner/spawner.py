@@ -34,6 +34,11 @@ class MesosSpawner(Spawner):
             cls._count = 0
         return cls._count
 
+    @count.setter
+    def count(self, value):
+        cls = self.__class__
+        cls._count = value
+
     @property
     def scheduler(self):
         cls = self.__class__
