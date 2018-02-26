@@ -74,7 +74,8 @@ c.JupyterHub.admin_access = True
 #  - takes two arguments: (handler, data),
 #    where `handler` is the calling web.RequestHandler,
 #    and `data` is the POST form data from the login page.
-c.JupyterHub.authenticator_class = 'jupyterhub.auth.PAMAuthenticator'
+#c.JupyterHub.authenticator_class = 'jupyterhub.auth.PAMAuthenticator'
+c.JupyterHub.authenticator_class = 'jupyterhub.auth.LocalAuthenticator'
 
 ## The base URL of the entire application
 #c.JupyterHub.base_url = '/'
@@ -226,6 +227,7 @@ c.JupyterHub.port = int(os.environ['PORT0'])
 
 ## DEPRECATED since version 0.8 : Use ConfigurableHTTPProxy.api_url
 #c.JupyterHub.proxy_api_port = 0
+#c.ConfigurableHTTPProxy.api_url="http://127.0.0.1:{}".format(os.environ['PORT2'])
 
 ## DEPRECATED since version 0.8: Use ConfigurableHTTPProxy.auth_token
 #c.JupyterHub.proxy_auth_token = ''
