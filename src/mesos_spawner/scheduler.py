@@ -42,7 +42,7 @@ class JupyterHubScheduler(Scheduler):
                     return range(int(res_range['begin']), int(res_range['end']))
         return 0.0
 
-    def get_task(task_id):
+    def get_task(self, task_id):
         return self.task_inf[task_id]
 
     def resourceOffers(self, driver, offers):
