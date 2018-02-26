@@ -1,6 +1,6 @@
 {
   "id": "jupyterhub",
-  "cmd": "mesos-spawner-init/examples/jupyterhub-marathon/run.sh",
+  "cmd": "cd mesos-spawner-init/examples/jupyterhub-marathon && sh run.sh",
   "cpus": 0.5,
   "mem": 128,
   "disk": 0,

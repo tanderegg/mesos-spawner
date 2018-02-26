@@ -183,7 +183,7 @@ c.JupyterHub.authenticator_class = 'jupyterhub.auth.PAMAuthenticator'
 #  Used alongside `hub_connect_ip`
 #
 #  .. versionadded:: 0.8
-c.JupyterHub.hub_connect_port = os.environ['PORT1']
+c.JupyterHub.hub_connect_port = int(os.environ['PORT1'])
 
 ## The ip address for the Hub process to *bind* to.
 #
@@ -192,7 +192,7 @@ c.JupyterHub.hub_connect_port = os.environ['PORT1']
 c.JupyterHub.hub_ip = '0.0.0.0'
 
 ## The port for the Hub process
-c.JupyterHub.hub_port = os.environ['PORT1']
+c.JupyterHub.hub_port = int(os.environ['PORT1'])
 
 ## The public facing ip of the whole application (the proxy)
 #c.JupyterHub.ip = ''
@@ -219,7 +219,7 @@ c.JupyterHub.hub_port = os.environ['PORT1']
 #c.JupyterHub.pid_file = ''
 
 ## The public facing port of the proxy
-c.JupyterHub.port = os.environ['PORT0']
+c.JupyterHub.port = int(os.environ['PORT0'])
 
 ## DEPRECATED since version 0.8 : Use ConfigurableHTTPProxy.api_url
 #c.JupyterHub.proxy_api_ip = ''
