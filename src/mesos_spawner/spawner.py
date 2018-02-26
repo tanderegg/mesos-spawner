@@ -47,7 +47,7 @@ class MesosSpawner(Spawner):
             cls._scheduler = MesosSchedulerDriver(
                 JupyterHubScheduler(),
                 framework_info,
-                self.mesos_master
+                self.mesos_master_uri
             )
 
             def run_driver_thread():
