@@ -119,7 +119,7 @@ class JupyterHubScheduler(Scheduler):
                 'value': ' && '.join([
                     "virtualenv -p python3 /tmp/env",
                     "/tmp/env/bin/python -m pip install jupyter jupyterhub",
-                    "/tmp/env/bin/jupyterhub-singleuser --ip=0.0.0.0 --port $PORT0 --debug -y"
+                    "/tmp/env/bin/jupyterhub-singleuser --debug -y --ip=0.0.0.0 --port $PORT0"
                 ]),
                 'user': self.notebook_request['user'],
                 'environment': {
@@ -143,7 +143,8 @@ class JupyterHubScheduler(Scheduler):
             },
             'resources': [
                 {'name': 'cpus', 'type': 'SCALAR', 'scalar': {'value': self.notebook_request['cpus']}},
-                {'name': 'mem', 'type': 'SCALAR', 'scalar': {'value': self.notebook_request['mem']}}
+                {'name': 'mem', 'type': 'SCALAR', 'scalar': {'value': self.notebook_request['mem']}},
+                {'name': 'ports', 'type': 'RANGE', 'ranges': {'range': {'begin': ports[0], 'end': port[1]}}}
             ]
         }
 

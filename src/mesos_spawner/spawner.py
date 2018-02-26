@@ -1,13 +1,14 @@
 import socket
-from threading import Thread
 import logging
+import time
+from threading import Thread
 
 from traitlets import Unicode
 from textwrap import dedent
 from jupyterhub.spawner import Spawner
 from tornado import gen
-
 from pymesos import MesosSchedulerDriver
+
 from mesos_spawner.scheduler import JupyterHubScheduler
 
 class MesosSpawner(Spawner):
