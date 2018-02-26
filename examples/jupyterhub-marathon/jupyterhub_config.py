@@ -279,6 +279,7 @@ c.ConfigurableHTTPProxy.command='node_modules/.bin/configurable-http-proxy'
 #
 #  Should be a subclass of Spawner.
 #c.JupyterHub.spawner_class = 'jupyterhub.spawner.LocalProcessSpawner'
+c.JupyterHub.spawner_class = 'mesos_spawner.spawner.MesosSpawner'
 
 ## Path to SSL certificate file for the public facing interface of the proxy
 #
