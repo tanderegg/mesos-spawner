@@ -81,6 +81,7 @@ class MesosSpawner(Spawner):
                 return (ip, port)
             yield gen.sleep(1)
 
+    @gen.coroutine
     def poll(self):
         # TODO: More robust state checking
         if self.task_id:
