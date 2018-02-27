@@ -405,6 +405,7 @@ c.Spawner.cmd = ['/tmp/env/bin/jupyterhub-singleuser']
 
 ## Enable debug-logging of the single-user server
 c.Spawner.debug = True
+c.MesosSpawner.debug = True
 
 ## The URL the single-user server should start in.
 #

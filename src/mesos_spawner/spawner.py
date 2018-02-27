@@ -74,15 +74,15 @@ class MesosSpawner(Spawner):
     @gen.coroutine
     def start(self):
         self.task_id = self.scheduler.add_notebook()
-        logging.debug("Spawning Jupyter with task id: {}".format(task_id))
+        logging.debug("Spawning Jupyter with task id: {}".format(self.task_id))
 
         while True:
-            if self.scheduler.is_task_running(task_id):
+            if self.scheduler.is_task_running(self.task_id):
                 logging.debug("New Jupyter instance started!")
                 self.count = self.count + 1
 
-                ip = self.scheduler.get_task(task_id)['ip']
-                port = self.scheduler.get_task(task_id)['port']
+                ip = self.scheduler.get_task(self.task_id)['ip']
+                port = self.scheduler.get_task(self.task_id)['port']
 
                 return (ip, port)
             yield gen.sleep(1)
