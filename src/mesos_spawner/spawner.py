@@ -73,7 +73,7 @@ class MesosSpawner(Spawner):
 
     @gen.coroutine
     def start(self):
-        task_id = self.scheduler.add_notebook()
+        self.task_id = self.scheduler.add_notebook()
         logging.debug("Spawning Jupyter with task id: {}".format(task_id))
 
         while True:
