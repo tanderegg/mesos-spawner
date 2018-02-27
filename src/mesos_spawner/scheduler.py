@@ -55,7 +55,7 @@ class JupyterHubScheduler(Scheduler):
 
     def kill_task(self, driver, task_id):
         self.task_info[task_id]['state'] == 'TASK_KILLING'
-        driver.killTask(task_id)
+        driver.killTask(str(task_id))
 
     def resourceOffers(self, driver, offers):
         filters = {'refuse_seconds': 5}
@@ -150,10 +150,10 @@ class JupyterHubScheduler(Scheduler):
                 'user': self.current_request['user'],
                 'environment': {
                     'variables': [
-                        {
-                            'name': 'JUPYTERHUB_API_URL',
-                            'value': self.hub_api_url
-                        },
+                        #{
+                        #    'name': 'JUPYTERHUB_API_URL',
+                        #    'value': self.hub_api_url
+                        #},
                         #{
                         #    'name': 'JUPYTERHUB_API_TOKEN',
                         #    'value': '0'
