@@ -27,6 +27,12 @@
       "protocol": "tcp",
       "name": null,
       "labels": null
+    },
+    {
+      "port": 2,
+      "protocol": "tcp",
+      "name": null,
+      "labels": null
     }
   ],
   "env": {},

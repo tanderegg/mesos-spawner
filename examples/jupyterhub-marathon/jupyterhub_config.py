@@ -227,7 +227,7 @@ c.JupyterHub.port = int(os.environ['PORT0'])
 
 ## DEPRECATED since version 0.8 : Use ConfigurableHTTPProxy.api_url
 #c.JupyterHub.proxy_api_port = 0
-#c.ConfigurableHTTPProxy.api_url="http://127.0.0.1:{}".format(os.environ['PORT2'])
+c.ConfigurableHTTPProxy.api_url="http://127.0.0.1:{}".format(os.environ['PORT2'])
 
 ## DEPRECATED since version 0.8: Use ConfigurableHTTPProxy.auth_token
 #c.JupyterHub.proxy_auth_token = ''
