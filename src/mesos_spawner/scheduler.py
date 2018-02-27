@@ -144,6 +144,10 @@ class JupyterHubScheduler(Scheduler):
                 'environment': {
                     'variables': [
                         {
+                            'name': 'JUPYTERHUB_API_URL',
+                            'value': self.hub.api_url
+                        },
+                        {
                             'name': 'JUPYTERHUB_API_TOKEN',
                             'value': '0'
                         },
