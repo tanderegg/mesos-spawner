@@ -148,14 +148,14 @@ class JupyterHubScheduler(Scheduler):
                             'name': 'JUPYTERHUB_API_URL',
                             'value': self.hub_api_url
                         },
-                        {
-                            'name': 'JUPYTERHUB_API_TOKEN',
-                            'value': '0'
-                        },
-                        {
-                            'name': 'JUPYTERHUB_CLIENT_ID',
-                            'value': '0'
-                        },
+                        #{
+                        #    'name': 'JUPYTERHUB_API_TOKEN',
+                        #    'value': '0'
+                        #},
+                        #{
+                        #    'name': 'JUPYTERHUB_CLIENT_ID',
+                        #    'value': '0'
+                        #},
                         {
                             'name': 'PORT0',
                             'value': str(ports[0])
