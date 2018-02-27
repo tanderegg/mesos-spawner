@@ -231,6 +231,7 @@ c.ConfigurableHTTPProxy.api_url="http://127.0.0.1:{}".format(os.environ['PORT2']
 
 ## DEPRECATED since version 0.8: Use ConfigurableHTTPProxy.auth_token
 #c.JupyterHub.proxy_auth_token = ''
+c.ConfigurableHTTPProxy.auth_token = os.environ.get('PROXY_AUTH_TOKEN', 'SECRET')
 
 ## Interval (in seconds) at which to check if the proxy is running.
 #c.JupyterHub.proxy_check_interval = 30

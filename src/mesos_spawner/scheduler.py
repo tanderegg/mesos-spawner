@@ -182,7 +182,7 @@ class JupyterHubScheduler(Scheduler):
             ]
         }
 
-        for key, value in env.items():
+        for key, value in self.current_request['env'].items():
             task['command']['environment']['variables'].append({
                 'name': key,
                 'value': value
