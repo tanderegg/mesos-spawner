@@ -11,7 +11,7 @@ TASK_MEM = 128
 
 class JupyterHubScheduler(Scheduler):
 
-    def __init__(self):
+    def __init__(self, hub_api_url):
         """
         The JupyterHubScheduler waits for a request to be added to
         self.request_queue by the MesosSpawner, then sets it as the
@@ -22,6 +22,7 @@ class JupyterHubScheduler(Scheduler):
         self.current_request = None
         self.tasks_running = set()
         self.task_info = dict()
+        self.hub_api_url = hub_api_url
 
     def is_task_running(self, task_id):
         if task_id in self.tasks_running:
@@ -145,7 +146,7 @@ class JupyterHubScheduler(Scheduler):
                     'variables': [
                         {
                             'name': 'JUPYTERHUB_API_URL',
-                            'value': self.hub.api_url
+                            'value': self.hub_api_url
                         },
                         {
                             'name': 'JUPYTERHUB_API_TOKEN',

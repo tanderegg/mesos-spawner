@@ -57,7 +57,7 @@ class MesosSpawner(Spawner):
             }
 
             logging.debug("Starting Mesos scheduler...")
-            cls._scheduler = JupyterHubScheduler()
+            cls._scheduler = JupyterHubScheduler(self.hub.api_url)
             cls._scheduler_driver = MesosSchedulerDriver(
                 self._scheduler,
                 framework_info,
