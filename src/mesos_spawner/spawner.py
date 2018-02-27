@@ -11,11 +11,6 @@ from pymesos import MesosSchedulerDriver
 from mesos_spawner.scheduler import JupyterHubScheduler
 
 class MesosSpawner(Spawner):
-    _scheduler = None
-    _scheduler_thread = None
-    _scheduler_driver = None
-    _count = None
-
     mesos_master_uri = Unicode(
         config=True,
         help=dedent(
@@ -27,8 +22,12 @@ class MesosSpawner(Spawner):
 
     task_id = Unicode()
 
+    _count = None
     @property
     def count(self):
+        """
+        A static variable to track number of instances spawned.
+        """
         cls = self.__class__
         if cls._count is None:
             cls._count = 0
@@ -39,8 +38,15 @@ class MesosSpawner(Spawner):
         cls = self.__class__
         cls._count = value
 
+    _scheduler = None
+    _scheduler_thread = None
+    _scheduler_driver = None
     @property
     def scheduler(self):
+        """
+        The global instance of the JupyterHubScheduler for
+        managing Mesos tasks.
+        """
         cls = self.__class__
         if cls._scheduler is None:
             framework_info = {
@@ -90,9 +96,11 @@ class MesosSpawner(Spawner):
             return 0
 
     @gen.coroutine
-    def stop(self):
+    def stop(self, now=False):
         logging.debug("Stopping Jupyter instance...")
         self.count = self.count - 1
+
+        # TODO: Actually stop the instance
 
         if self.count < 1:
             logging.debug("No more instances, stopping scheduler...")

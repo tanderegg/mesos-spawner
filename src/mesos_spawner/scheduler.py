@@ -12,8 +12,14 @@ TASK_MEM = 128
 class JupyterHubScheduler(Scheduler):
 
     def __init__(self):
-        self.queue = Queue(maxsize=0)
-        self.notebook_request = None
+        """
+        The JupyterHubScheduler waits for a request to be added to
+        self.request_queue by the MesosSpawner, then sets it as the
+        self.current_request and takes it off the queue.  self.tasks_running
+        tracks active Jupyterhub sessions, and self.task_info contains metadata.
+        """
+        self.request_queue = Queue(maxsize=0)
+        self.current_request = None
         self.tasks_running = set()
         self.task_info = dict()
 
@@ -24,7 +30,7 @@ class JupyterHubScheduler(Scheduler):
 
     def add_notebook(self):
         task_id = str(uuid.uuid4())
-        self.queue.put({
+        self.request_queue.put({
             'task_id': task_id,
             'user': 'mesagent',
             'cpus': 0.5,
@@ -56,10 +62,10 @@ class JupyterHubScheduler(Scheduler):
 
         # If there's no active notebook request, get one off the queue,
         # or decline offers.
-        if not self.notebook_request:
+        if not self.current_request:
             logging.debug("No active Notebook request, getting one off the queue")
             try:
-                self.notebook_request = self.queue.get(False)
+                self.current_request = self.request_queue.get(False)
             except Empty:
                 # No requested notebooks, so decline the offer by launching
                 # 0 tasks.
@@ -69,7 +75,7 @@ class JupyterHubScheduler(Scheduler):
                 return
 
         for offer in offers:
-            if self.notebook_request:
+            if self.current_request:
                 if not self._processOffer(driver, offer, filters):
                     self._declineOffer(driver, offer, filters)
             else:
@@ -82,8 +88,17 @@ class JupyterHubScheduler(Scheduler):
             task_id
         ))
 
+        self.task_info[task_id]['state'] = update['state']
+
         if update['state'] == 'TASK_RUNNING':
             self.tasks_running.add(task_id)
+
+        if (update['state'] == 'TASK_FAILED' or
+           update['state'] == 'TASK_KILLED' or
+           update['state'] == 'TASK_ERROR' or
+           update['state'] == 'TASK_GONE' or
+           update['state'] == 'TASK_LOST'):
+           self.tasks_running.remove(task_id)
 
     def _declineOffer(self, driver, offer, filters):
         driver.launchTasks(offer['id'], [], filters)
@@ -99,7 +114,7 @@ class JupyterHubScheduler(Scheduler):
             offer['hostname'], cpus, mem
         ))
 
-        if cpus < self.notebook_request['cpus'] or mem < self.notebook_request['mem']:
+        if cpus < self.current_request['cpus'] or mem < self.current_request['mem']:
             logging.debug(
                 "Offer insufficient, cpus: {} mem: {}".format(
                     cpus, mem
@@ -107,7 +122,7 @@ class JupyterHubScheduler(Scheduler):
             )
             return False
 
-        task_id = self.notebook_request['task_id']
+        task_id = self.current_request['task_id']
 
         # Create a private /tmp, and install the virtualenv into it
         # to avoid long path issues.
@@ -118,18 +133,22 @@ class JupyterHubScheduler(Scheduler):
             'agent_id': {
                 'value': offer['agent_id']['value']
             },
-            'name': 'jupyterhub-{}-{}'.format(self.notebook_request['user'], task_id),
+            'name': 'jupyterhub-{}-{}'.format(self.current_request['user'], task_id),
             'command': {
                 'value': ' && '.join([
                     "virtualenv -p python3 /tmp/env",
                     "/tmp/env/bin/python -m pip install jupyter jupyterhub",
                     "/tmp/env/bin/jupyterhub-singleuser --debug -y --ip=0.0.0.0 --port $PORT0"
                 ]),
-                'user': self.notebook_request['user'],
+                'user': self.current_request['user'],
                 'environment': {
                     'variables': [
                         {
                             'name': 'JUPYTERHUB_API_TOKEN',
+                            'value': '0'
+                        },
+                        {
+                            'name': 'JUPYTERHUB_CLIENT_ID',
                             'value': '0'
                         },
                         {
@@ -150,8 +169,8 @@ class JupyterHubScheduler(Scheduler):
                 ]
             },
             'resources': [
-                {'name': 'cpus', 'type': 'SCALAR', 'scalar': {'value': self.notebook_request['cpus']}},
-                {'name': 'mem', 'type': 'SCALAR', 'scalar': {'value': self.notebook_request['mem']}},
+                {'name': 'cpus', 'type': 'SCALAR', 'scalar': {'value': self.current_request['cpus']}},
+                {'name': 'mem', 'type': 'SCALAR', 'scalar': {'value': self.current_request['mem']}},
                 {'name': 'ports', 'type': 'RANGES', 'ranges': {'range': {'begin': ports[0], 'end': ports[1]}}}
             ]
         }
@@ -160,10 +179,11 @@ class JupyterHubScheduler(Scheduler):
         driver.launchTasks(offer['id'], [task], filters)
         self.task_info[task_id] = {
             "port": ports[0],
-            "ip": offer['url']['address']['ip']
+            "ip": offer['url']['address']['ip'],
+            "state": "TASK_STAGING"
         }
-        self.queue.task_done()
-        self.notebook_request = None
+        self.request_queue.task_done()
+        self.current_request = None
         return True
 
 class TestScheduler(Scheduler):
