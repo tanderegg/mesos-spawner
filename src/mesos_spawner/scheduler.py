@@ -55,7 +55,7 @@ class JupyterHubScheduler(Scheduler):
 
     def kill_task(self, driver, task_id):
         self.task_info[task_id]['state'] == 'TASK_KILLING'
-        driver.killTask(str(task_id))
+        driver.killTask({"value": task_id})
 
     def resourceOffers(self, driver, offers):
         filters = {'refuse_seconds': 5}
