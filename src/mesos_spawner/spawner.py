@@ -57,7 +57,12 @@ class MesosSpawner(Spawner):
             }
 
             logging.debug("Starting Mesos scheduler...")
-            cls._scheduler = JupyterHubScheduler(self.hub.api_url)
+
+            # TODO: Doesn't work without DNS (i.e. vagrant)
+            hub_api_url = self.hub.api_url
+            #hub_api_url = "http://{}:{}".format(socket.)
+
+            cls._scheduler = JupyterHubScheduler(hub_api_url)
             cls._scheduler_driver = MesosSchedulerDriver(
                 self._scheduler,
                 framework_info,
