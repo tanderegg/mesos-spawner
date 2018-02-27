@@ -7,7 +7,7 @@ from os.path import abspath, join, dirname
 from threading import Thread
 
 from pymesos import MesosSchedulerDriver
-from mesos_spawner.scheduler import TestScheduler
+from mesos_spawner.test_scheduler import TestScheduler
 
 EXECUTOR_CPU = 0.1
 EXECUTOR_MEM = 32
