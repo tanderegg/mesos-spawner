@@ -38,9 +38,14 @@ class MesosSpawner(Spawner):
         cls = self.__class__
         cls._count = value
 
+    _scheduler_driver = None
+    @property
+    def scheduler_driver(self):
+        cls = self.__class__
+        return cls._scheduler_driver
+
     _scheduler = None
     _scheduler_thread = None
-    _scheduler_driver = None
     @property
     def scheduler(self):
         """
@@ -78,7 +83,8 @@ class MesosSpawner(Spawner):
 
     @gen.coroutine
     def start(self):
-        self.task_id = self.scheduler.add_notebook()
+        env = super().get_env()
+        self.task_id = self.scheduler.add_notebook(env)
         logging.debug("Spawning Jupyter with task id: {}".format(self.task_id))
 
         while True:
@@ -109,7 +115,8 @@ class MesosSpawner(Spawner):
 
         if self.count < 1:
             logging.debug("No more instances, stopping scheduler...")
-            self.scheduler.stop()
+            if self.scheduler_driver:
+                self.scheduler_driver.stop()
 
     def load_state(self, state):
         super(MesosSpawner, self).load_state(state)

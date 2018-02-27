@@ -29,13 +29,14 @@ class JupyterHubScheduler(Scheduler):
             return True
         return False
 
-    def add_notebook(self):
+    def add_notebook(self, env):
         task_id = str(uuid.uuid4())
         self.request_queue.put({
             'task_id': task_id,
             'user': 'mesagent',
             'cpus': 0.5,
-            'mem': 128
+            'mem': 128,
+            'env': env
         })
         return task_id
 
@@ -137,10 +138,10 @@ class JupyterHubScheduler(Scheduler):
             'name': 'jupyterhub-{}-{}'.format(self.current_request['user'], task_id),
             'command': {
                 'value': ' && '.join([
+                    "env",
                     "virtualenv -p python3 /tmp/env",
                     "/tmp/env/bin/python -m pip install jupyter jupyterhub",
-                    "/tmp/env/bin/jupyterhub-singleuser --ip=0.0.0.0 --port $PORT0 --generate-config",
-                    "/tmp/env/bin/jupyterhub-singleuser --debug -y --ip=0.0.0.0 --port $PORT0"
+                    "/tmp/env/bin/jupyterhub-singleuser --debug -y --ip=0.0.0.0 --port $PORT0 --user {}".format(self.current_request['user'])
                 ]),
                 'user': self.current_request['user'],
                 'environment': {
@@ -180,6 +181,12 @@ class JupyterHubScheduler(Scheduler):
                 {'name': 'ports', 'type': 'RANGES', 'ranges': {'range': {'begin': ports[0], 'end': ports[1]}}}
             ]
         }
+
+        for key, value in env.items():
+            task['command']['environment']['variables'].append({
+                'name': key,
+                'value': value
+            })
 
         logging.debug("Launching task {}".format(task_id))
         driver.launchTasks(offer['id'], [task], filters)
