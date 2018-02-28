@@ -7,11 +7,11 @@ from queue import Queue, Empty
 from pymesos import MesosSchedulerDriver, Scheduler, encode_data
 
 TASK_CPU = 0.5
-TASK_MEM = 128
+TASK_MEM = 99
 
 class JupyterHubScheduler(Scheduler):
 
-    def __init__(self, hub_api_url):
+    def __init__(self):
         """
         The JupyterHubScheduler waits for a request to be added to
         self.request_queue by the MesosSpawner, then sets it as the
@@ -22,7 +22,6 @@ class JupyterHubScheduler(Scheduler):
         self.current_request = None
         self.tasks_running = set()
         self.task_info = dict()
-        self.hub_api_url = hub_api_url
 
     def is_task_running(self, task_id):
         if task_id in self.tasks_running:
@@ -34,8 +33,8 @@ class JupyterHubScheduler(Scheduler):
         self.request_queue.put({
             'task_id': task_id,
             'user': 'mesagent',
-            'cpus': 0.5,
-            'mem': 128,
+            'cpus': TASK_CPU,
+            'mem': TASK_MEM,
             'env': env
         })
         return task_id
@@ -154,18 +153,6 @@ class JupyterHubScheduler(Scheduler):
                 'user': self.current_request['user'],
                 'environment': {
                     'variables': [
-                        #{
-                        #    'name': 'JUPYTERHUB_API_URL',
-                        #    'value': self.hub_api_url
-                        #},
-                        #{
-                        #    'name': 'JUPYTERHUB_API_TOKEN',
-                        #    'value': '0'
-                        #},
-                        #{
-                        #    'name': 'JUPYTERHUB_CLIENT_ID',
-                        #    'value': '0'
-                        #},
                         {
                             'name': 'PORT0',
                             'value': str(ports[0])

@@ -61,13 +61,9 @@ class MesosSpawner(Spawner):
                 'hostname': socket.gethostname()
             }
 
-            logging.debug("Starting Mesos scheduler...")
+            self.log.debug("Starting Mesos scheduler...")
 
-            # TODO: Doesn't work without DNS (i.e. vagrant)
-            hub_api_url = self.hub.api_url
-            #hub_api_url = "http://{}:{}".format(socket.)
-
-            cls._scheduler = JupyterHubScheduler(hub_api_url)
+            cls._scheduler = JupyterHubScheduler()
             cls._scheduler_driver = MesosSchedulerDriver(
                 self._scheduler,
                 framework_info,
@@ -85,11 +81,11 @@ class MesosSpawner(Spawner):
     def start(self):
         env = super().get_env()
         self.task_id = self.scheduler.add_notebook(env)
-        logging.debug("Spawning Jupyter with task id: {}".format(self.task_id))
+        self.log.debug("Spawning Jupyter with task id: {}".format(self.task_id))
 
         while True:
             if self.scheduler.is_task_running(self.task_id):
-                logging.debug("New Jupyter instance started!")
+                self.log.debug("New Jupyter instance started!")
                 self.count = self.count + 1
 
                 ip = self.scheduler.get_task(self.task_id)['ip']
@@ -108,13 +104,13 @@ class MesosSpawner(Spawner):
 
     @gen.coroutine
     def stop(self, now=False):
-        logging.debug("Stopping Jupyter instance...")
+        self.log.debug("Stopping Jupyter instance...")
         self.count = self.count - 1
 
         self.scheduler.kill_task(self.scheduler_driver, self.task_id)
 
         if self.count < 1:
-            logging.debug("No more instances, stopping scheduler...")
+            self.log.debug("No more instances, stopping scheduler...")
             if self.scheduler_driver:
                 self.scheduler_driver.stop()
 

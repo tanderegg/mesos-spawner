@@ -9,9 +9,6 @@ from threading import Thread
 from pymesos import MesosSchedulerDriver
 from mesos_spawner.scheduler import JupyterHubScheduler
 
-EXECUTOR_CPU = 0.1
-EXECUTOR_MEM = 32
-
 def main(master):
     framework = {
         'user': 'mesagent', #getpass.getuser(),
@@ -46,7 +43,7 @@ def main(master):
         time.sleep(1)
         seconds += 1
         if seconds == 5:
-            task_id = scheduler.add_notebook()
+            task_id = scheduler.add_notebook({})
             logging.debug("Requested new notebook: {}".format(task_id))
 
 if __name__ == '__main__':
