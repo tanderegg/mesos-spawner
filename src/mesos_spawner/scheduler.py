@@ -105,7 +105,10 @@ class JupyterHubScheduler(Scheduler):
            update['state'] == 'TASK_ERROR' or
            update['state'] == 'TASK_GONE' or
            update['state'] == 'TASK_LOST'):
-           self.tasks_running.remove(task_id)
+           if task_id in self.tasks_running:
+               self.tasks_running.remove(task_id)
+           else:
+               logging.debug("Received task termination message from task that is not running.")
 
     def _declineOffer(self, driver, offer, filters):
         driver.launchTasks(offer['id'], [], filters)
