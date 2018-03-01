@@ -101,7 +101,7 @@ class MesosSpawner(Spawner):
             self.log.debug("Poll determined task is running.")
             return None
         else:
-            self.log.debg("Poll determined task is not running.")
+            self.log.debug("Poll determined task is not running.")
             return 0
 
     @gen.coroutine
