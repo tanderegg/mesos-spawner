@@ -109,10 +109,10 @@ class MesosSpawner(Spawner):
 
         self.scheduler.kill_task(self.scheduler_driver, self.task_id)
 
-        if self.count < 1:
-            self.log.debug("No more instances, stopping scheduler...")
-            if self.scheduler_driver:
-                self.scheduler_driver.stop()
+        #if self.count < 1:
+        #    self.log.debug("No more instances, stopping scheduler...")
+        #    if self.scheduler_driver:
+        #        self.scheduler_driver.stop()
 
     def load_state(self, state):
         super(MesosSpawner, self).load_state(state)
