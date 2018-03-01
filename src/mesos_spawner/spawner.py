@@ -98,8 +98,10 @@ class MesosSpawner(Spawner):
     def poll(self):
         # TODO: More robust state checking
         if self.task_id:
+            self.log.debug("Poll determined task is running.")
             return None
         else:
+            self.log.debg("Poll determined task is not running.")
             return 0
 
     @gen.coroutine
@@ -107,7 +109,7 @@ class MesosSpawner(Spawner):
         self.log.debug("Stopping Jupyter instance...")
         self.count = self.count - 1
 
-        self.scheduler.kill_task(self.scheduler_driver, self.task_id)
+        #self.scheduler.kill_task(self.scheduler_driver, self.task_id)
 
         #if self.count < 1:
         #    self.log.debug("No more instances, stopping scheduler...")
