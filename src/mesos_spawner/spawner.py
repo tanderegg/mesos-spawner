@@ -109,7 +109,7 @@ class MesosSpawner(Spawner):
         self.log.debug("Stopping Jupyter instance...")
         self.count = self.count - 1
 
-        #self.scheduler.kill_task(self.scheduler_driver, self.task_id)
+        self.scheduler.kill_task(self.scheduler_driver, self.task_id)
 
         #if self.count < 1:
         #    self.log.debug("No more instances, stopping scheduler...")
