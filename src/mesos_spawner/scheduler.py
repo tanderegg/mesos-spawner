@@ -147,7 +147,8 @@ class JupyterHubScheduler(Scheduler):
                 'value': ' && '.join([
                     "env",
                     "virtualenv -p python3 --system-site-packages /tmp/env",
-                    "/tmp/env/bin/pip install -I jupyter jupyterhub",
+                    "/tmp/env/bin/pip install -I jupyter jupyterhub beakerx",
+                    "/tmp/env/bin/beakerx install",
                     "/tmp/env/bin/jupyterhub-singleuser --cookie-name=$JPY_COOKIE_NAME --debug -y --ip=0.0.0.0 --port $PORT0 --user {}".format(self.current_request['user'])
                 ]),
                 'user': self.current_request['user'],
