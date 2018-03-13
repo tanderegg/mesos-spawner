@@ -20,6 +20,19 @@ class MesosSpawner(Spawner):
         )
     )
 
+    user = Unicode(
+        config=True,
+        help=dedent(
+            """
+            User to run the Mesos Framework as"
+            """
+        )
+    )
+
+    @default('user')
+    def _user_default(self):
+        return 'mesagent'
+
     task_id = Unicode()
 
     _count = None
@@ -55,8 +68,7 @@ class MesosSpawner(Spawner):
         cls = self.__class__
         if cls._scheduler is None:
             framework_info = {
-                #'user': self.user.name,
-                'user': 'mesagent',
+                'user': self.user,
                 'name': 'JupyterHubFramework',
                 'hostname': socket.gethostname()
             }
@@ -110,6 +122,21 @@ class MesosSpawner(Spawner):
         self.count = self.count - 1
 
         self.scheduler.kill_task(self.scheduler_driver, self.task_id)
+        while True:
+            try:
+                state = self.scheduler.get_task(self.task_id)['state']
+            except KeyError:
+                self.log.debug("Task {} does not exist, cannot kill.".format(task_id))
+                return
+
+            if state not in [
+                'TASK_RUNNING', 'TASK_STAGING', 'TASK_KILLING'
+            ]:
+                self.log.debug("Task {} reached state {}".format(task_id, state))
+                return
+            else:
+                self.log.debug("Still killing task {}".format(task_id))
+                yield gen.sleep(1)
 
         #if self.count < 1:
         #    self.log.debug("No more instances, stopping scheduler...")
