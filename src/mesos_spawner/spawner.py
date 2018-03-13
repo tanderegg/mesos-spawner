@@ -2,7 +2,7 @@ import socket
 import logging
 from threading import Thread
 
-from traitlets import Unicode
+from traitlets import Unicode, default
 from textwrap import dedent
 from jupyterhub.spawner import Spawner
 from tornado import gen
