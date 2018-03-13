@@ -113,16 +113,16 @@ class MesosSpawner(Spawner):
             try:
                 state = self.scheduler.get_task(self.task_id)['state']
             except KeyError:
-                self.log.debug("Task {} does not exist, cannot kill.".format(task_id))
+                self.log.debug("Task {} does not exist, cannot kill.".format(self.task_id))
                 return
 
             if state not in [
                 'TASK_RUNNING', 'TASK_STAGING', 'TASK_KILLING'
             ]:
-                self.log.debug("Task {} reached state {}".format(task_id, state))
+                self.log.debug("Task {} reached state {}".format(self.task_id, state))
                 return
             else:
-                self.log.debug("Still killing task {}".format(task_id))
+                self.log.debug("Still killing task {}".format(self.task_id))
                 yield gen.sleep(1)
 
         #if self.count < 1:
