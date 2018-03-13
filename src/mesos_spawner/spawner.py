@@ -20,19 +20,6 @@ class MesosSpawner(Spawner):
         )
     )
 
-    user = Unicode(
-        config=True,
-        help=dedent(
-            """
-            User to run the Mesos Framework as"
-            """
-        )
-    )
-
-    @default('user')
-    def _user_default(self):
-        return 'mesagent'
-
     task_id = Unicode()
 
     _count = None
