@@ -55,7 +55,7 @@ class MesosSpawner(Spawner):
         cls = self.__class__
         if cls._scheduler is None:
             framework_info = {
-                'user': self.user,
+                'user': self.user.name,
                 'name': 'JupyterHubFramework',
                 'hostname': socket.gethostname()
             }
