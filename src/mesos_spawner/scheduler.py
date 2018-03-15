@@ -161,6 +161,10 @@ class JupyterHubScheduler(Scheduler):
                         {
                             'name': 'PORT0',
                             'value': str(ports[0])
+                        },
+                        {
+                            'name': 'JUPYTER_CONFIG_DIR',
+                            'value': '/tmp/jupyter_config'
                         }
                     ]
                 },
