@@ -149,7 +149,7 @@ class JupyterHubScheduler(Scheduler):
                     "virtualenv -p python3 --system-site-packages /tmp/env",
                     "source /tmp/env/bin/activate",
                     "pip install -I jupyter jupyterhub beakerx",
-                    "sed -i /tmp/env/lib/python3.4/site-packages/beakerx/install.py s/, exist_ok=True//g",
+                    "sed -i 's/, exist_ok=True//g' /tmp/env/lib/python3.4/site-packages/beakerx/install.py",
                     "beakerx install",
                     "jupyter nbextension enable beakerx --py --sys-prefix",
                     "jupyterhub-singleuser --cookie-name=$JPY_COOKIE_NAME --debug -y --ip=0.0.0.0 --port $PORT0 --user {}".format(self.current_request['user'])
