@@ -149,8 +149,8 @@ class JupyterHubScheduler(Scheduler):
                     "virtualenv -p python3 --system-site-packages /tmp/env",
                     "source /tmp/env/bin/activate",
                     "pip install -I jupyter jupyterhub beakerx",
-                    "sed -i 's/, exist_ok=True//g' /tmp/env/lib/python3.4/site-packages/beakerx/install.py",
-                    "sed -i 's/, exist_ok=True//g' /tmp/env/lib/python3.4/site-packages/beakerx/environment.py",
+                    "sed -i 's/pathlib.Path(dir_path).mkdir(parents=True, exist_ok=True)/os.makedirs(dir_path, exist_ok=True)/g' /tmp/env/lib/python3.4/site-packages/beakerx/install.py",
+                    "sed -i 's/pathlib.Path(paths.jupyter_config_dir()).mkdir(parents=True, exist_ok=True)/os.makedirs(paths.jupyter_config_dir(), exist_ok=True)/g' /tmp/env/lib/python3.4/site-packages/beakerx/environment.py",
                     "beakerx install",
                     "jupyter nbextension enable beakerx --py --sys-prefix",
                     "jupyterhub-singleuser --cookie-name=$JPY_COOKIE_NAME --debug -y --ip=0.0.0.0 --port $PORT0 --user {}".format(self.current_request['user'])
@@ -161,10 +161,6 @@ class JupyterHubScheduler(Scheduler):
                         {
                             'name': 'PORT0',
                             'value': str(ports[0])
-                        },
-                        {
-                            'name': 'JUPYTER_CONFIG_DIR',
-                            'value': '/tmp/jupyter_config'
                         }
                     ]
                 },
